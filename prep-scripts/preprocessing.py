@@ -148,4 +148,41 @@ def create_business():
             )
             bad_created = True
 
-create_business()
+
+# create_business()
+
+bad_business_ids = set(pd.read_csv(os.path.join("data", "preprocessed", "business_bad.csv"))["business_id"].tolist())
+
+def create_business_categories():
+
+    created = False
+
+    for obj in get_raw_data("business"):
+        business_id = obj["business_id"]
+
+        if business_id not in bad_business_ids and obj.get("categories", ""):
+            raw_categories = obj["categories"]
+            categories = [
+                c.strip()
+                for c in raw_categories.split(",")
+            ]
+            df = pd.DataFrame({
+                "business_id": [business_id for _ in range(len(categories))],
+                "category": categories
+            })
+
+            df.to_csv(
+                os.path.join("data", "preprocessed", "business_categories.csv"),
+                index=False,
+                header = not created,
+                mode = "a" if created else "w"
+            )
+            created = True
+
+create_business_categories()
+
+
+
+
+
+
