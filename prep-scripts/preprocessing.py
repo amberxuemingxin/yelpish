@@ -8,8 +8,9 @@ import hashlib
 import string
 import random
 import numpy as np
+import uuid
 
-SMOKE = True
+SMOKE = False
 
 def get_raw_data(name: str) -> Iterable[object]:
     if name != "photo":
@@ -275,6 +276,9 @@ def create_review():
     good_created = False
     bad_created = False
 
+    bad_business_ids = set(get_bad_business_ids())
+    bad_user_ids = set(get_bad_user_ids())
+
     with open(
         os.path.join("data", "preprocessed", "review.csv"),
         "w",
@@ -294,12 +298,9 @@ def create_review():
             except:
                 result_obj["date"] = None
 
-            result_obj["text"] = obj["text"][:500]
+            result_obj["text"] = obj["text"][:1000]
 
             df = pd.DataFrame([result_obj]).astype({"stars": int})
-
-            bad_business_ids = set(get_bad_business_ids())
-            bad_user_ids = set(get_bad_user_ids())
 
             is_good = (
                 df.notnull().all().all()
@@ -346,6 +347,7 @@ def create_review_attitude():
         encoding="utf-8",
         newline="\n",
     ) as f:
+
         for obj in get_raw_data("review"):
             review_id = obj["review_id"]
             if review_id not in bad_review_ids:
@@ -386,7 +388,11 @@ def create_tip():
         newline="\n",
     ) as bad_f:
         for obj in get_raw_data("tip"):
-            result_obj = {k: obj.get(k, None) for k in ["tip_id", "user_id", "business_id"]}
+
+            result_obj = {"tip_id": str(uuid.uuid4())}
+
+            for k in ["user_id", "business_id"]:
+                result_obj[k] = obj.get(k, None)
 
             result_obj["text"] = obj["text"][:200]
 
