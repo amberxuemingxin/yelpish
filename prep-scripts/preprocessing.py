@@ -4,6 +4,9 @@ import os
 import tqdm
 import json
 import datetime
+import hashlib
+import string
+import random
 
 
 def get_raw_data(name: str) -> Iterable[object]:
@@ -138,7 +141,7 @@ def create_business():
                 mode="a" if good_created else "w",
             )
             good_created = True
-        
+
         else:
             df.to_csv(
                 os.path.join("data", "preprocessed", "business_bad.csv"),
@@ -153,8 +156,8 @@ def create_business():
 
 bad_business_ids = set(pd.read_csv(os.path.join("data", "preprocessed", "business_bad.csv"))["business_id"].tolist())
 
-def create_business_categories():
 
+def create_business_categories():
     created = False
 
     for obj in get_raw_data("business"):
@@ -162,27 +165,63 @@ def create_business_categories():
 
         if business_id not in bad_business_ids and obj.get("categories", ""):
             raw_categories = obj["categories"]
-            categories = [
-                c.strip()
-                for c in raw_categories.split(",")
-            ]
-            df = pd.DataFrame({
-                "business_id": [business_id for _ in range(len(categories))],
-                "category": categories
-            })
+            categories = [c.strip() for c in raw_categories.split(",")]
+            df = pd.DataFrame({"business_id": [business_id for _ in range(len(categories))], "category": categories})
 
             df.to_csv(
                 os.path.join("data", "preprocessed", "business_categories.csv"),
                 index=False,
-                header = not created,
-                mode = "a" if created else "w"
+                header=not created,
+                mode="a" if created else "w",
             )
             created = True
 
-create_business_categories()
+
+def random_string(length):
+    letters = string.ascii_lowercase
+    return "".join(random.choice(letters) for _ in range(length))
 
 
+# create_business_categories()
 
 
+def create_user():
+    good_created = False
+    bad_created = False
 
+    for obj in get_raw_data("user"):
+        result_obj = {k: obj.get(k, None) for k in ["user_id", "name"]}
+        salt = random_string(10)
+        password = random_string(6)
 
+        result_obj["salt"] = salt
+        result_obj["salted_hashed_password"] = hashlib.sha256((salt + password).encode()).hexdigest()
+
+        try:
+            result_obj["yelp_since"] = datetime.datetime.strptime(obj["yelping_since"], r"%Y-%m-%d %H:%M:%S")
+        except:
+            result_obj["yelp_since"] = None
+
+        df = pd.DataFrame([result_obj])
+
+        is_good = df.notnull().all().all()
+
+        if is_good:
+            df.to_csv(
+                os.path.join("data", "preprocessed", "user.csv"),
+                index=False,
+                header=not good_created,
+                mode="a" if good_created else "w",
+            )
+            good_created = True
+
+        else:
+            df.to_csv(
+                os.path.join("data", "preprocessed", "user.csv"),
+                index=False,
+                header=not bad_created,
+                mode="a" if bad_created else "w",
+            )
+            bad_created = True
+
+create_user()
