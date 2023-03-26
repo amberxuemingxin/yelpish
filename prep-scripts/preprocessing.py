@@ -374,6 +374,9 @@ def create_tip():
     good_created = False
     bad_created = False
 
+    bad_business_ids = set(get_bad_business_ids())
+    bad_user_ids = set(get_bad_user_ids())
+
     with open(
         os.path.join("data", "preprocessed", "tip.csv"),
         "w",
@@ -399,9 +402,6 @@ def create_tip():
                 result_obj["date"] = None
 
             df = pd.DataFrame([result_obj])
-
-            bad_business_ids = set(get_bad_business_ids())
-            bad_user_ids = set(get_bad_user_ids())
 
             is_good = (
                 df.notnull().all().all()
@@ -472,6 +472,6 @@ if __name__ == "__main__":
     # create_business_categories()
     # create_user()
     # create_review()
-    create_review_attitude()
-    # create_tip()
+    # create_review_attitude()
+    create_tip()
     # create_photo()
