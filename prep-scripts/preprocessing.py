@@ -12,6 +12,7 @@ import uuid
 
 SMOKE = False
 
+
 def get_raw_data(name: str) -> Iterable[object]:
     if name != "photo":
         if SMOKE:
@@ -337,8 +338,6 @@ def create_review_attitude():
     user_ids = get_good_user_ids()
     bad_review_ids = set(get_bad_review_ids())
 
-    rng = np.random.default_rng()
-
     created = False
 
     with open(
@@ -347,14 +346,13 @@ def create_review_attitude():
         encoding="utf-8",
         newline="\n",
     ) as f:
-
         for obj in get_raw_data("review"):
             review_id = obj["review_id"]
             if review_id not in bad_review_ids:
                 for attitude in ["useful", "funny", "cool"]:
                     cnt = obj[attitude]
                     if cnt > 0:
-                        selected_ids = rng.choice(user_ids, size=cnt, replace=False)
+                        selected_ids = random.sample(user_ids, k=cnt)
 
                         df = pd.DataFrame(
                             {
@@ -388,7 +386,6 @@ def create_tip():
         newline="\n",
     ) as bad_f:
         for obj in get_raw_data("tip"):
-
             result_obj = {"tip_id": str(uuid.uuid4())}
 
             for k in ["user_id", "business_id"]:
@@ -471,10 +468,10 @@ def create_photo():
 
 
 if __name__ == "__main__":
-    create_business()
-    create_business_categories()
-    create_user()
-    create_review()
+    # create_business()
+    # create_business_categories()
+    # create_user()
+    # create_review()
     create_review_attitude()
-    create_tip()
-    create_photo()
+    # create_tip()
+    # create_photo()

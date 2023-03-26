@@ -162,3 +162,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+# Performance profiling
+*.lprof 
+*.pyc
