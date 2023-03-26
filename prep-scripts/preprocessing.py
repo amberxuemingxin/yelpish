@@ -430,6 +430,8 @@ def create_photo():
     good_created = False
     bad_created = False
 
+    bad_business_ids = set(get_bad_business_ids())
+
     with open(
         os.path.join("data", "preprocessed", "photo.csv"),
         "w",
@@ -445,8 +447,6 @@ def create_photo():
             result_obj = {k: obj.get(k, None) for k in ["photo_id", "business_id", "caption", "label"]}
 
             df = pd.DataFrame([result_obj])
-
-            bad_business_ids = set(get_bad_business_ids())
 
             is_good = df.notnull().all().all() and result_obj["business_id"] not in bad_business_ids
 
@@ -468,10 +468,10 @@ def create_photo():
 
 
 if __name__ == "__main__":
-    # create_business()
-    # create_business_categories()
-    # create_user()
-    # create_review()
-    # create_review_attitude()
+    create_business()
+    create_business_categories()
+    create_user()
+    create_review()
+    create_review_attitude()
     create_tip()
-    # create_photo()
+    create_photo()
