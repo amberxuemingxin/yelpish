@@ -24,6 +24,25 @@
 
 8.
 
-9.
+9.  Find each user's different attitude's average stars on reviews
 
-10.
+    SELECT u.user_id, ra.attitude_type, AVG(stars)
+    FROM review r JOIN user u on r.user_id = u.user_id
+      JOIN review_attitude ra on r.review_id = ra.review_id 
+        AND u.user_id = ra.attitude_user_id
+    GROUP BY u.user_id, ra.attitude_type
+
+10. Find the category of business with the highest stars
+
+    WITH temp AS (
+      SELECT b.business_id, b.name, AVG(r.stars) AS stars
+      FROM business b JOIN business_categories bc on b.business_id = bc.business_id
+      JOIN review r on b.business_id = r.business_id
+      GROUP BY b.business_id, b.name
+    )
+    SELECT DISTINCT bc.category
+    FROM temp JOIN business_categories bc ON temp.business_id = bc.category
+    WHERE temp.stars >= ALL (
+      SELECT stars
+      FROM temp
+    );
