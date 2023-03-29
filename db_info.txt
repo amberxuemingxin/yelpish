@@ -1,0 +1,29 @@
+1. Find all the distinct names of business
+
+    SELECT DISTINCT name
+    FROM business;
+
+2. Find the average of all the reviews
+
+    SELECT AVG(stars)
+    FROM review;
+
+3. Find the count of different attitude
+
+    SELECT attitude_type, COUNT(*)
+    FROM review_attitude
+    GROUP BY attitude_type;
+
+4. 
+
+5.
+
+6.
+
+7.
+
+8.
+
+9.
+
+10.
