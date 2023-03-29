@@ -14,7 +14,10 @@
     FROM review_attitude
     GROUP BY attitude_type;
 
-4. 
+4.  Find all user name 
+
+    SELECT name
+    FROM user
 
 5.
 
