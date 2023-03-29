@@ -44,8 +44,18 @@
         GROUP BY b.bussiness_id
     
 
-8.  
-    
+8.  Find highest star and lowest star for each user give with the business name and category
+ 
+    WITH temp AS (
+    SELECT user_id, MAX(stars) AS highest, MIN(stars) AS lowest, business_id
+    FROM review 
+    GROUP BY user_id
+    )
+    SELECT temp.user_id, temp.highest, temp.lowest, b.name, c.category
+    FROM temp JOIN business b ON temp.business_id = b.business_id
+    JOIN business_categories c ON b.business_id = c.business_id 
+
+
 
 9.  Find each user's different attitude's average stars on reviews
 
