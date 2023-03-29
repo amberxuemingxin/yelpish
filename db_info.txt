@@ -19,9 +19,17 @@
     SELECT name
     FROM user
 
-5.
+5.  Find count of tips for each user
+    
+    SELECT COUNT(tip_id), user_id
+    FROM tip
+    GROUP BY user_id
 
-6.
+6.  Find count of reviews for each business
+
+    SELECT COUNT(review_id), business_id
+    FROM review
+    GROUP BY bussiness_id
 
 7.
 
