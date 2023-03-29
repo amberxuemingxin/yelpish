@@ -31,9 +31,21 @@
     FROM review
     GROUP BY bussiness_id
 
-7.
+7.  Find each bussiness with average stars with useful tips
 
-8.
+    WITH use_re AS(
+        SELECT text, review_id
+        FROM review_attitude
+        WHERE attitude_type = 'useful')
+        
+        SELECT b.name, AVG(r.stars), b.business_id, u.text
+        FROM business b JOIN review ON b.business_id = r.business
+        JOIN use_re u ON u.review_id = r.review_id
+        GROUP BY b.bussiness_id
+    
+
+8.  
+    
 
 9.  Find each user's different attitude's average stars on reviews
 
