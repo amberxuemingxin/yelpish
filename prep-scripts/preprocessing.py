@@ -9,6 +9,7 @@ import string
 import random
 import numpy as np
 import uuid
+import nanoid
 
 SMOKE = False
 
@@ -241,6 +242,8 @@ def create_user():
             except:
                 result_obj["yelp_since"] = None
 
+            result_obj["username"] = nanoid.generate(size=20)
+
             df = pd.DataFrame([result_obj])
 
             is_good = df.notnull().all().all()
@@ -468,10 +471,10 @@ def create_photo():
 
 
 if __name__ == "__main__":
-    create_business()
-    create_business_categories()
+    # create_business()
+    # create_business_categories()
     create_user()
-    create_review()
-    create_review_attitude()
-    create_tip()
-    create_photo()
+    # create_review()
+    # create_review_attitude()
+    # create_tip()
+    # create_photo()
