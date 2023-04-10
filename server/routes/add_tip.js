@@ -11,7 +11,7 @@ async function addTip(req, res) {
     const date = new Date()
 
     connection.query(`
-        insert into tips
+        insert into tip
         (
             tip_id,
             user_id,
