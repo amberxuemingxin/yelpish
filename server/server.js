@@ -21,6 +21,9 @@ app.post('/add_review', add_review)
 const register = require("./routes/register")
 app.post('/register', register)
 
+const profile = require("./routes/profile")
+app.get('/profile/:user_id', profile)
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
