@@ -18,10 +18,11 @@ async function addTip(req, res) {
             business_id,
             \`date\`,
             \`text\`
+            
         )
         values
         (
-            ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?
         )
     `,
         [tip_id, user_id, business_id, text],
