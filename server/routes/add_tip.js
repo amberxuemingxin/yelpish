@@ -11,20 +11,21 @@ async function addTip(req, res) {
     const date = new Date()
 
     connection.query(`
-        insert into tips
+        insert into tip
         (
             tip_id,
             user_id,
             business_id,
             \`date\`,
             \`text\`
+
         )
         values
         (
-            ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?
         )
     `,
-        [tip_id, user_id, business_id, text],
+        [tip_id, user_id, business_id, date, text],
         (err, data) => {
             if (err) {
                 res.json({

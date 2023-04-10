@@ -15,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 // provide their handlers that we implemented in routes.js
 // app.get('/author/:type', routes.author);
 
+const add_tip = require("./routes/add_tip")
+app.post('/add_tip', add_tip)
+
 const add_review = require("./routes/add_review")
 app.post('/add_review', add_review)
 
