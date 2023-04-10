@@ -18,14 +18,14 @@ async function addTip(req, res) {
             business_id,
             \`date\`,
             \`text\`
-            
+
         )
         values
         (
             ?, ?, ?, ?, ?
         )
     `,
-        [tip_id, user_id, business_id, text],
+        [tip_id, user_id, business_id, date, text],
         (err, data) => {
             if (err) {
                 res.json({
