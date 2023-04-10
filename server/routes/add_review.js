@@ -1,4 +1,4 @@
-const connection = require("../db_connection")
+const { connection } = require("../db_connection")
 const { v4: uuidv4 } = require("uuid")
 
 async function addReview(req, res) {
