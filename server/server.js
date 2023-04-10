@@ -18,6 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 const add_review = require("./routes/add_review")
 app.post('/add_review', add_review)
 
+const register = require("./routes/register")
+app.post('/register', register)
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
