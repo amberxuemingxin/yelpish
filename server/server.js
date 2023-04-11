@@ -1,24 +1,37 @@
 const express = require('express');
 const cors = require('cors');
 const config = require('./config');
-const routes = require('./routes');
+const routes = require('./routes_archive');
 
 const app = express();
 app.use(cors({
   origin: '*',
 }));
 
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 // We use express to define our various API endpoints and
 // provide their handlers that we implemented in routes.js
-app.get('/author/:type', routes.author);
-app.get('/random', routes.random);
-app.get('/song/:song_id', routes.song);
-app.get('/album/:album_id', routes.album);
-app.get('/albums', routes.albums);
-app.get('/album_songs/:album_id', routes.album_songs);
-app.get('/top_songs', routes.top_songs);
-app.get('/top_albums', routes.top_albums);
-app.get('/search_songs', routes.search_songs);
+// app.get('/author/:type', routes.author);
+
+const add_tip = require("./routes/add_tip")
+app.post('/add_tip', add_tip)
+
+const add_review = require("./routes/add_review")
+app.post('/add_review', add_review)
+
+const register = require("./routes/register")
+app.post('/register', register)
+
+const profile = require("./routes/profile")
+app.get('/profile/:user_id', profile)
+
+const login = require("./routes/login")
+app.post('/login', login)
+
+const search_business = require("./routes/search_business")
+app.get('/search_business', search_business)
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
