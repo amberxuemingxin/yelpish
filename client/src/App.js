@@ -2,12 +2,16 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { indigo, amber } from '@mui/material/colors'
 import { createTheme } from "@mui/material/styles";
+import React, { useState } from "react";
 
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
 import AlbumsPage from './pages/AlbumsPage';
 import SongsPage from './pages/SongsPage';
-import AlbumInfoPage from './pages/AlbumInfoPage'
+import AlbumInfoPage from './pages/AlbumInfoPage';
+
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -23,16 +27,24 @@ export const theme = createTheme({
 // our application, with each Route component representing a page and the common
 // NavBar component allowing us to navigate between pages (with hyperlinks)
 export default function App() {
+  const [isLoggedIn, setIsLoggedIn] =useState(false);
+
+  const updateLoggedIn = (status) => {
+    setIsLoggedIn(status);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={isLoggedIn ? <HomePage /> : <LoginPage updateLoggedInStatus={updateLoggedIn}/>} />
+          <Route path="/login" element={<LoginPage updateLoggedInStatus={updateLoggedIn}/>} />
           <Route path="/albums" element={<AlbumsPage />} />
           <Route path="/albums/:album_id" element={<AlbumInfoPage />} />
           <Route path="/songs" element={<SongsPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
