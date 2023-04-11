@@ -30,6 +30,9 @@ app.get('/profile/:user_id', profile)
 const login = require("./routes/login")
 app.post('/login', login)
 
+const search_business = require("./routes/search_business")
+app.get('/search_business', search_business)
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
