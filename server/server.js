@@ -30,6 +30,10 @@ app.get('/profile/:user_id', profile)
 const login = require("./routes/login")
 app.post('/login', login)
 
+const recommendation = require("./routes/recommendation")
+app.get('/recommendation', recommendation)
+
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
