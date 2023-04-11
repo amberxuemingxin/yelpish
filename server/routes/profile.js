@@ -32,7 +32,7 @@ async function profile(req, res) {
                 [user_id]
             )).map(obj => obj.review_id)
 
-            return getReviewObjects(review_ids)
+            return getReviewObjects(review_ids, user_id)
         }
     )()
 
