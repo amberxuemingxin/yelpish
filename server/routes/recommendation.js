@@ -5,23 +5,21 @@ async function recommendation(req, res) {
   const latitude = parseFloat(req.query.latitude) || null;
 
   let query = `
-                SELECT
-                    b.business_id AS id,
-                    b.name,
-                    c.category,
-                    AVG(r.stars) AS rating
+              SELECT
+              b.business_id AS id,
+              b.name,
+              GROUP_CONCAT(DISTINCT(c.category)) AS categories,
+              AVG(r.stars) AS rating
     `;
 
   if (longitude && latitude) {
     query += `
         ,
-        (ROUND(
-            6371 * acos(
-            cos(radians(?)) * cos(radians(b.latitude)) *
-            cos(radians(b.longitude) - radians(?)) +
-            sin(radians(?)) * sin(radians(b.latitude))
-            ),2)
-        ) AS distance
+        ROUND(ST_Distance_Sphere(
+          POINT(?,?),
+          POINT(b.longitude, b.latitude)
+      ) / 1000,2) AS distance
+
     `;
   }
 
@@ -47,6 +45,7 @@ async function recommendation(req, res) {
     const formattedBusinesses = businesses.map((business) => {
       return {
         ...business,
+        categories: business.categories.split(','),
         distance: longitude && latitude ? business.distance : null,
       };
     });
