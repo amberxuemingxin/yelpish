@@ -31,7 +31,7 @@ const login = require("./routes/login")
 app.post('/login', login)
 
 const search_business = require("./routes/search_business")
-app.get('/search_business', search_business)
+app.post('/search_business', search_business)
 
 const reviews = require("./routes/reviews")
 app.get('/reviews/:business_id', reviews)
