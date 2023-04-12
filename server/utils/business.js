@@ -15,21 +15,42 @@ async function getBusinessObjects(business_ids, longitude_, latitude_) {
         return []
     }
 
-    const coord_provided = longitude_ && latitude_
+    const coord_provided = (longitude_ && latitude_) ?? false
     const longitude = longitude_ ?? 0
     const latitude = latitude_ ?? 0
 
-    const simple_info_promise =
-        async_query(
+    const info =
+        await async_query(
             `
             with selected_businesses as (
                 select
                     business_id as id,
                     \`name\`,
-                    st_distance_sphere(
-                        point(longitude, latitude),
-                        point(?, ?)
-                    ) as distance
+                    if(
+                        ?, 
+                        st_distance_sphere(
+                            point(longitude, latitude),
+                            point(?, ?)
+                        ) / 1609.344, -- meter to miles
+                        null
+                    ) as distance,
+                    state,
+                    city,
+                    address,
+                    monday_start,
+                    monday_end,
+                    tuesday_start,
+                    tuesday_end,
+                    wednesday_start,
+                    wednesday_end,
+                    thursday_start,
+                    thursday_end,
+                    friday_start,
+                    friday_end,
+                    saturday_start,
+                    saturday_end,
+                    sunday_start,
+                    sunday_end
                 from
                     business
                 where
@@ -37,58 +58,67 @@ async function getBusinessObjects(business_ids, longitude_, latitude_) {
             ),
             selected_stars as (
                 select
-                    b.id,
-                    avg(r.stars) as rating
+                    business_id,
+                    avg(stars) as rating
                 from
-                    selected_businesses b
-                        -- push down filtering business to improve performance
-                    inner join review r 
-                    on b.id = r.business_id
+                    review
+                where
+                    business_id in (?)
                 group by
-                    b.id
-            )
-            select
-                b.id,
-                b.name,
-                s.rating,
-                b.distance
-            from
-                selected_businesses b
-                inner join selected_stars s
-                on b.id = s.id
-            `,
-            [longitude, latitude, business_ids]
-        )
-
-    const category_info_promise =
-        async_query(
-            `
+                    business_id
+            ),
+            selected_categories as (
                 select
                     business_id,
-                    category
+                    group_concat(category separator ',') as categories
                 from
                     business_categories
                 where
                     business_id in (?)
+                group by
+                    business_id
+            ),
+            selected_photos as (
+                select
+                    business_id,
+                    group_concat(photo_id separator ',') as photos
+                from
+                    photo
+                where
+                    business_id in (?)
+                group by
+                    business_id
+            )
+            select
+                b.*,
+                s.rating,
+                c.categories,
+                p.photos
+            from
+                selected_businesses b
+                left outer join selected_stars s
+                on b.id = s.business_id
+                left outer join selected_categories c
+                on b.id = c.business_id
+                left outer join selected_photos p
+                on b.id = p.business_id
             `,
-            [business_ids]
+            [
+                coord_provided,
+                longitude,
+                latitude,
+                business_ids,
+                business_ids,
+                business_ids,
+                business_ids
+            ]
         )
 
-    const [
-        simple_info,
-        category_info
-    ] = await Promise.all(
-        [simple_info_promise, category_info_promise]
-    )
 
-    grouped_categories = _.groupBy(category_info, "business_id")
-
-    const result = simple_info.map((obj) => ({
-        id: obj.id,
-        "name": obj.name,
-        rating: obj.rating,
-        distance: obj.distance / 1609.344, // meter to miles
-        categories: grouped_categories[obj.id].map(x => x.category)
+    const result = info.map((obj) => ({
+        ...obj,
+        categories: obj.categories ? obj.categories.split(",") : null,
+        photos: obj.photos ? obj.photos.split(",") : null
     }))
 
     return result

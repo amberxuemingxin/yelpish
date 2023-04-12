@@ -22,7 +22,6 @@ async function login(req, res) {
                 const salt = data[0].salt
                 const salted_hashed_password = data[0].salted_hashed_password
                 const input_salted_hashed_password = await sha256hash(password, salt)
-
                 if (salted_hashed_password === input_salted_hashed_password) {
                     // Password match, login successful
                     res.json({ user_id: user_id })
