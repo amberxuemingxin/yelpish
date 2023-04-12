@@ -15,10 +15,10 @@ async function recommendation(req, res) {
   if (longitude && latitude) {
     query += `
         ,
-        ROUND(ST_Distance_Sphere(
+        ST_Distance_Sphere(
           POINT(?,?),
           POINT(b.longitude, b.latitude)
-      ) / 1000,2) AS distance
+      ) AS distance
 
     `;
   }

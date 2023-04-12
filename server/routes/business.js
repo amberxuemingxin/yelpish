@@ -4,32 +4,33 @@ async function business(req, res) {
   const businessId = req.params.business_id;
 
   const query = `
-    SELECT
-        b.name,
-        c.category,
-        r.stars AS rating,
-        b.state,
-        b.city,
-        b.address,
-        b.monday_start,
-        b.monday_end,
-        b.tuesday_start,
-        b.tuesday_end,
-        b.wednesday_start,
-        b.wednesday_end,
-        b.thursday_start,
-        b.thursday_end,
-        b.friday_start,
-        b.friday_end,
-        b.saturday_start,
-        b.saturday_end,
-        b.sunday_start,
-        b.sunday_end
-    FROM
-        business b
-        LEFT JOIN business_categories c ON b.business_id = c.business_id
-        LEFT JOIN review r ON b.business_id = r.business_id
-    WHERE b.business_id = ?;
+          SELECT
+            b.name,
+            GROUP_CONCAT(DISTINCT(c.category)) AS categories,
+            AVG(r.stars) AS rating,
+            b.state,
+            b.city,
+            b.address,
+            b.monday_start,
+            b.monday_end,
+            b.tuesday_start,
+            b.tuesday_end,
+            b.wednesday_start,
+            b.wednesday_end,
+            b.thursday_start,
+            b.thursday_end,
+            b.friday_start,
+            b.friday_end,
+            b.saturday_start,
+            b.saturday_end,
+            b.sunday_start,
+            b.sunday_end
+          FROM
+            business b
+            LEFT JOIN business_categories c ON b.business_id = c.business_id
+            LEFT JOIN review r ON b.business_id = r.business_id
+          WHERE b.business_id = ?
+          GROUP BY b.name;
   `;
 
   try {
@@ -42,7 +43,7 @@ async function business(req, res) {
 
     const business = {
       name: result[0].name,
-      categories: result.map((row) => row.category),
+      categories: result[0].categories.split(','),
       rating: result[0].rating,
       state: result[0].state,
       city: result[0].city,
