@@ -3,10 +3,10 @@ const { getBusinessObjects } = require("../utils/business")
 
 async function recommendation(req, res) {
 
-  const distance_valid = req.query.longitude && req.query.latitude
+  const coord_provided = (req.query.longitude && req.query.latitude) ?? false
 
-  const longitude = parseFloat(req.query.longitude) ?? 0;
-  const latitude = parseFloat(req.query.latitude) ?? 0;
+  const longitude = parseFloat(req.query.longitude ?? 0);
+  const latitude = parseFloat(req.query.latitude ?? 0);
 
   try {
     const business_ids = (await async_query(
@@ -40,11 +40,14 @@ async function recommendation(req, res) {
         limit 10
         ;
       `
-      , [distance_valid, longitude, latitude]
+      , [coord_provided, longitude, latitude]
     )).map(obj => obj.business_id);
 
     res.json({
-      businesses: await getBusinessObjects(business_ids)
+      businesses: await (
+        coord_provided ?
+          getBusinessObjects(business_ids, longitude, latitude) :
+          getBusinessObjects(business_ids))
     })
   } catch (err) {
     res.status(500).json({
