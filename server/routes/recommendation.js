@@ -27,15 +27,15 @@ async function recommendation(req, res) {
           inner join business_rating r
           on b.business_id = r.business_id
         order by
-          r.rating *
-          if( 
-            ?, 
-            st_distance_sphere(
-                point(longitude, latitude),
-                point(?, ?)
-            ), 
-            1
-          )
+          power(r.rating, 2) /
+            log(if( 
+              ?, 
+              st_distance_sphere(
+                  point(longitude, latitude),
+                  point(?, ?)
+              ), 
+              1
+            ))
           DESC
         limit 10
         ;
