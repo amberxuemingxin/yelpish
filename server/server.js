@@ -33,6 +33,8 @@ app.post('/login', login)
 const recommendation = require("./routes/recommendation")
 app.get('/recommendation', recommendation)
 
+const getTips = require("./routes/tips");
+app.get("/tips/:business_id", getTips);
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
