@@ -35,6 +35,7 @@ app.get('/recommendation', recommendation)
 
 const getTips = require("./routes/tips");
 app.get("/tips/:business_id", getTips);
+
 const search_business = require("./routes/search_business")
 app.get('/search_business', search_business)
 
