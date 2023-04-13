@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './index.css';
 
 const config = require('../config.json');
 
@@ -39,11 +40,11 @@ export default function LoginPage({isLoggedIn, updateLoggedInStatus, updateUsern
             <h2>Login</h2>
             <form className="login-form" onSubmit={handleSubmit}>
               <div className="username-input">
-                <label>Username</label>
+                <label>Username   </label>
                 <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"/>
               </div>
               <div className="password-input">
-                <label>Password</label>
+                <label>Password   </label>
                 <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"/>
               </div>   
               <button type="submit">Log In</button>
