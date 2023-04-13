@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { indigo, amber } from '@mui/material/colors'
 import { createTheme } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
@@ -10,8 +10,12 @@ import AlbumsPage from './pages/AlbumsPage';
 import SongsPage from './pages/SongsPage';
 import AlbumInfoPage from './pages/AlbumInfoPage';
 
+import HomePage2 from './pages/HomePage2';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ProfilePage from "./pages/ProfilePage";
+import SearchBusinessPage from "./pages/SearchBusinessPage";
+import AddReviewPage from "./pages/AddReviewPage";
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -28,10 +32,12 @@ export const theme = createTheme({
 // NavBar component allowing us to navigate between pages (with hyperlinks)
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] =useState(false);
+  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
 
-  const updateLoggedIn = (status) => {
-    setIsLoggedIn(status);
-  }
+  useEffect(() => {
+    console.log('isLoggedIn: ' + isLoggedIn);
+  }, [isLoggedIn]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -39,12 +45,20 @@ export default function App() {
       <BrowserRouter>
         <NavBar />
         <Routes>
-          <Route path="/" element={isLoggedIn ? <HomePage /> : <LoginPage updateLoggedInStatus={updateLoggedIn}/>} />
-          <Route path="/login" element={<LoginPage updateLoggedInStatus={updateLoggedIn}/>} />
-          <Route path="/albums" element={<AlbumsPage />} />
-          <Route path="/albums/:album_id" element={<AlbumInfoPage />} />
-          <Route path="/songs" element={<SongsPage />} />
+          <Route path="/" element={isLoggedIn ? <HomePage2 username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
           <Route path="/register" element={<RegisterPage />} />
+          {isLoggedIn ? 
+              <Route path="/search_business" element={<SearchBusinessPage/>} />
+            : <Route/>
+          }
+          {isLoggedIn ? 
+              <Route path="/profile" element={<ProfilePage username={username} userId="__QLyY_W06q10ZfBQg7Dcg"/>} />
+            : <Route/>
+          }
+          {isLoggedIn ? 
+              <Route path="/add_review" element={<AddReviewPage userId={userId} businessId="_-ag9LGrOJkJW3bXmtAv-w"/>} />
+            : <Route/>
+          }
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

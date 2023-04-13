@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+const config = require('../config.json');
+
 export default function Register() {
     const [username, setUsername] = useState('');
     const [name, setName] = useState('');
@@ -11,7 +13,7 @@ export default function Register() {
         e.preventDefault();
         console.log('Registering, username: ' + username + ', name: ' + name + ', password: ' + password);
 
-        fetch("http://localhost:8000/register", {
+        fetch(`http://${config.server_host}:${config.server_port}/register`, {
           method: "POST",
           crossDomain: true,
           headers: {
@@ -38,15 +40,15 @@ export default function Register() {
       <div className="register-container">
         <h2>Register Here</h2>
         <form className="register-form" onSubmit={handleSubmit}>
-          <div class="username-input">
+          <div className="username-input">
             <label>Username</label>
             <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
           </div>
-          <div class="name-input">
+          <div className="name-input">
             <label>Full Name</label>
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe"/>
           </div>
-          <div class="password-input">
+          <div className="password-input">
             <label>Password</label>
             <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"/>
           </div> 
@@ -54,7 +56,7 @@ export default function Register() {
         </form>
         {registerSuccess ? <p>Success! Please go back to login page.</p> : <></>}
         {registerFailure ? <p>Registration Fail! Please try again.</p> : <></>}
-        <a href="/login">Back to Login.</a>
+        <a href="/">Back to Login.</a>
     </div>
     )
 }

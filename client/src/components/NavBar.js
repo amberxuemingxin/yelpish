@@ -37,8 +37,8 @@ export default function NavBar() {
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <NavText href='/' text='CIS550_Project' isMain />
-          <NavText href='/albums' text='ALBUMS' />
-          <NavText href='/songs' text='SONGS' />
+          {/* <NavText href='/albums' text='ALBUMS' />
+          <NavText href='/songs' text='SONGS' /> */}
         </Toolbar>
       </Container>
     </AppBar>

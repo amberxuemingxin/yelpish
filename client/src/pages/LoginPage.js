@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 
-export default function LoginPage({updateLoggedInStatus}) {
+const config = require('../config.json');
+
+export default function LoginPage({isLoggedIn, updateLoggedInStatus, updateUsername, updateUserId}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Registering, username: ' + username + ', password: ' + password);
+        console.log('Logging, username: ' + username + ', password: ' + password);
 
-        fetch("http://localhost:8000/login", {
+        fetch(`http://${config.server_host}:${config.server_port}/login`, {
           method: "POST",
           crossDomain: true,
           headers: {
@@ -24,6 +26,10 @@ export default function LoginPage({updateLoggedInStatus}) {
         .then((data) => {
           if (data.user_id !== null) {
             updateLoggedInStatus(true);
+            updateUsername(username);
+            updateUserId(data.user_id);
+            console.log(data);
+            //window.location = `http://${config.server_host}:${config.frontend_port}/`;
           }
         });
     }
@@ -32,11 +38,11 @@ export default function LoginPage({updateLoggedInStatus}) {
         <div className="login-container">
             <h2>Login</h2>
             <form className="login-form" onSubmit={handleSubmit}>
-              <div class="username-input">
+              <div className="username-input">
                 <label>Username</label>
                 <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"/>
               </div>
-              <div class="password-input">
+              <div className="password-input">
                 <label>Password</label>
                 <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"/>
               </div>   

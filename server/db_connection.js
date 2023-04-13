@@ -1,6 +1,6 @@
 const mysql = require('mysql')
 const config = require('./config.json')
-const { promisify } = require("node:util")
+const { promisify } = require("util")
 
 // Creates MySQL connection using database credential provided in config.json
 // Do not edit. If the connection fails, make sure to check that config.json is filled out correctly

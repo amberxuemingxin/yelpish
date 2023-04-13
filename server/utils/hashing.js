@@ -1,4 +1,4 @@
-const { pbkdf2 } = require("node:crypto")
+const { pbkdf2 } = require("crypto")
 
 async function sha256hash(secret, salt) {
     return new Promise((resolve, reject) => {
