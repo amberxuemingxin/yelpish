@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
+/* login page */
+* {
+  margin: 0;
+  font-family: "Quicksand";
+  color: #333;
+}
+.login-container {
+  padding: 40px;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+  margin: center;
+}
+.login-container h2 {
+  padding: 40px;
+  color: #f1356d;
+}
+.login-container .login-form {
+  margin-left: auto;
+}
+
+.login-container label:hover {
+  color: #f1356d;
+}
+
+.register-container h2 {
+    padding: 40px;
+    color: #f1356d;
+}
+
+.register-form {
+    margin-left: auto;
+}
+.register-container {
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    max-width: 700px;
+    margin: center;
+}
