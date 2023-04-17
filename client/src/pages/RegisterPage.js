@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import './index.css';
 
 const config = require('../config.json');
 
@@ -41,16 +42,16 @@ export default function Register() {
         <h2>Register Here</h2>
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="username-input">
-            <label>Username</label>
-            <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username" />
+            <label>Username   </label>
+            <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="johndoe" />
           </div>
           <div className="name-input">
-            <label>Full Name</label>
+            <label>Full Name   </label>
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="John Doe"/>
           </div>
           <div className="password-input">
-            <label>Password</label>
-            <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"/>
+            <label>Password   </label>
+            <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="12345678"/>
           </div> 
           <button type="submit">Register</button>
         </form>

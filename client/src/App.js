@@ -47,10 +47,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={isLoggedIn ? <HomePage2 username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
           <Route path="/register" element={<RegisterPage />} />
-          {isLoggedIn ? 
-              <Route path="/search_business" element={<SearchBusinessPage/>} />
-            : <Route/>
-          }
+          <Route path="/search_business" element={<SearchBusinessPage/>} />
           {isLoggedIn ? 
               <Route path="/profile" element={<ProfilePage username={username} userId="__QLyY_W06q10ZfBQg7Dcg"/>} />
             : <Route/>
