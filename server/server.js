@@ -48,6 +48,9 @@ app.get("/business/:business_id", business)
 const similar_taste_users_favourite = require("./routes/similar_taste")
 app.get("/similar_taste_users_favourite/:user_id", similar_taste_users_favourite)
 
+const top_reviews = require("./routes/top_reviews")
+app.get('/top_reviews/:business_id', top_reviews)
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
