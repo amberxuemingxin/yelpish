@@ -45,6 +45,19 @@ app.get('/reviews/:business_id', reviews)
 const business = require("./routes/business")
 app.get("/business/:business_id", business)
 
+const similar_taste_users_favourite = require("./routes/similar_taste")
+app.get("/similar_taste_users_favourite/:user_id", similar_taste_users_favourite)
+
+const top_reviews = require("./routes/top_reviews")
+app.get('/top_reviews/:business_id', top_reviews)
+
+const highest_star_category_review_count = require("./routes/highest_star_category")
+app.get('/highest_star_category_review_count', highest_star_category_review_count)
+
+const business_in_city_lowest_review = require("./routes/business_in_city")
+app.get('/business_in_city_lowest_review', business_in_city_lowest_review)
+
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });

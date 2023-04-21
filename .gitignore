@@ -168,3 +168,5 @@ docs/_build/
 *.pyc
 
 *.pem
+
+.vscode/
