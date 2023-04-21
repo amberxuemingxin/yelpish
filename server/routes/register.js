@@ -1,7 +1,9 @@
-const { connection } = require("../db_connection")
+const { async_query } = require("../db_connection")
 const { v4: uuidv4 } = require("uuid")
 const { sha256hash } = require("../utils/hashing")
 const { randomString } = require("../utils/random")
+const { neo4jSession } = require("../neo4j_connection")
+const { USE_NEO4J } = require("../process_env")
 
 async function register(req, res) {
 
@@ -14,7 +16,7 @@ async function register(req, res) {
     const salted_hashed_password = await sha256hash(password, salt)
     const yelp_since = new Date()
 
-    connection.query(`
+    const mysqlPromise = async_query(`
         insert into \`user\`
         (
             user_id,
@@ -29,23 +31,36 @@ async function register(req, res) {
             ?, ?, ?, ?, ?, ?
         )
     `,
-        [user_id, name, salt, salted_hashed_password, yelp_since, username],
-        (err, data) => {
-            if (err && err.code === 'ER_DUP_ENTRY') {
-                // Duplicated username, account creation failed
-                res.json({})
-            }
-            else if (err) {
-                res.json({
-                    error: err
-                })
-            } else {
-                res.json({
-                    user_id: user_id
-                })
-            }
-        }
+        [user_id, name, salt, salted_hashed_password, yelp_since, username]
     )
+
+    const neo4jPromise = USE_NEO4J ?
+        neo4jSession.run(
+            `
+                merge (n {user_id: $userId});
+            `,
+            {
+                userId: user_id
+            }
+        ) : (async () => { })()
+
+    try {
+        const [mysqlRes, neo4jRes] = await Promise.all([mysqlPromise, neo4jPromise])
+        res.json({
+            user_id: user_id
+        })
+    }
+    catch (err) {
+        if (err && err.code === 'ER_DUP_ENTRY') {
+            // Duplicated username, account creation failed
+            res.json({})
+        }
+        else if (err) {
+            res.json({
+                error: err
+            })
+        }
+    }
 }
 
 module.exports = register
