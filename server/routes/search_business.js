@@ -3,7 +3,11 @@ const { getBusinessObjects } = require("../utils/business")
 
 async function search_business(req, res) {
     const name_keyword = req.body.name_keyword ?? ""
-    const categories = req.body.categories ?? ["SKIP_FILTER_CATEGORIES"]
+    const categories = (
+        req.body.categories === null ||
+        req.body.categories === undefined ||
+        req.body.categories.length === 0
+    ) ? ["SKIP_FILTER_CATEGORIES"] : req.body.categories
 
     const do_distance_filter =
         req.body.longitude && req.body.latitude && req.body.max_miles;
@@ -88,10 +92,10 @@ async function search_business(req, res) {
     const business_ids = business_info.map(entry => entry.business_id)
 
     res.json({
-        businesses: 
-            (req.body.longitude && req.body.latitude) ? 
-            await getBusinessObjects(business_ids, longitude, latitude) : 
-            await getBusinessObjects(business_ids)
+        businesses:
+            (req.body.longitude && req.body.latitude) ?
+                await getBusinessObjects(business_ids, longitude, latitude) :
+                await getBusinessObjects(business_ids)
     })
 }
 
