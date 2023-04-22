@@ -10,7 +10,7 @@ const { connection, async_query } = require("../db_connection")
  * @returns {Array<object}
  */
 async function getReviewObjects(review_ids, user_id_) {
-    if (!review_ids) {
+    if (!review_ids || review_ids.length === 0) {
         return []
     }
 
