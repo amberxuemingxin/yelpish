@@ -60,6 +60,10 @@ app.get('/business_in_city_lowest_review', business_in_city_lowest_review)
 const find_friend = require("./routes/find_friend")
 app.get('/find_friend', find_friend)
 
+const request_add_friend = require("./routes/request_add_friend")
+app.post('/request_add_friend', request_add_friend)
+
+
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
 });
