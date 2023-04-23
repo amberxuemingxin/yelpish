@@ -11,7 +11,7 @@ const _ = require("lodash")
  */
 async function getBusinessObjects(business_ids, longitude_, latitude_) {
 
-    if (!business_ids) {
+    if (!business_ids || business_ids.length === 0) {
         return []
     }
 
