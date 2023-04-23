@@ -63,6 +63,9 @@ app.get('/find_friend', find_friend)
 const request_add_friend = require("./routes/request_add_friend")
 app.post('/request_add_friend', request_add_friend)
 
+const pending_friend_request = require("./routes/pending_friend_request")
+app.get('/pending_friend_request/:user_id', pending_friend_request)
+
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)
