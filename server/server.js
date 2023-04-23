@@ -57,6 +57,17 @@ app.get('/highest_star_category_review_count', highest_star_category_review_coun
 const business_in_city_lowest_review = require("./routes/business_in_city")
 app.get('/business_in_city_lowest_review', business_in_city_lowest_review)
 
+const find_friend = require("./routes/find_friend")
+app.get('/find_friend', find_friend)
+
+const request_add_friend = require("./routes/request_add_friend")
+app.post('/request_add_friend', request_add_friend)
+
+const pending_friend_request = require("./routes/pending_friend_request")
+app.get('/pending_friend_request/:user_id', pending_friend_request)
+
+const respond_add_friend = require("./routes/respond_add_friend")
+app.post('/respond_add_friend', respond_add_friend)
 
 app.listen(config.server_port, () => {
   console.log(`Server running at http://${config.server_host}:${config.server_port}/`)

@@ -2,8 +2,7 @@ const { async_query } = require("../db_connection")
 const { v4: uuidv4 } = require("uuid")
 const { sha256hash } = require("../utils/hashing")
 const { randomString } = require("../utils/random")
-const { neo4jSession } = require("../neo4j_connection")
-const { USE_NEO4J } = require("../process_env")
+const { neo4jQueryIfUsing } = require("../neo4j_connection")
 
 async function register(req, res) {
 
@@ -34,15 +33,14 @@ async function register(req, res) {
         [user_id, name, salt, salted_hashed_password, yelp_since, username]
     )
 
-    const neo4jPromise = USE_NEO4J ?
-        neo4jSession.run(
-            `
+    const neo4jPromise = neo4jQueryIfUsing(
+        `
                 merge (n {user_id: $userId});
             `,
-            {
-                userId: user_id
-            }
-        ) : (async () => { })()
+        {
+            userId: user_id
+        }
+    )
 
     try {
         const [mysqlRes, neo4jRes] = await Promise.all([mysqlPromise, neo4jPromise])
