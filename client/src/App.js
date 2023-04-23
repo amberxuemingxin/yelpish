@@ -6,16 +6,10 @@ import React, { useState, useEffect} from "react";
 
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
-import AlbumsPage from './pages/AlbumsPage';
-import SongsPage from './pages/SongsPage';
-import AlbumInfoPage from './pages/AlbumInfoPage';
-
-import HomePage2 from './pages/HomePage2';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from "./pages/ProfilePage";
 import SearchBusinessPage from "./pages/SearchBusinessPage";
-import AddReviewPage from "./pages/AddReviewPage";
 import BusinessInfoPage from "./pages/BusinessInfoPage";
 
 // createTheme enables you to customize the look and feel of your app past the default
@@ -46,7 +40,7 @@ export default function App() {
       <BrowserRouter>
         <NavBar isLoggedIn={isLoggedIn} />
         <Routes>
-          <Route path="/" element={isLoggedIn ? <HomePage2 username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
+          <Route path="/" element={isLoggedIn ? <HomePage username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/search_business" element={<SearchBusinessPage/>} />
           <Route path="/business/:business_id" element={<BusinessInfoPage userId={userId} isLoggedIn={isLoggedIn} />} />

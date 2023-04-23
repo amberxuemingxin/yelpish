@@ -1,74 +1,222 @@
 import { useEffect, useState } from 'react';
-import { Container, Divider, Link } from '@mui/material';
+import { Container, Grid, TextField, Button } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
 
-import LazyTable from '../components/LazyTable';
-import SongCard from '../components/SongCard';
 const config = require('../config.json');
 
-export default function HomePage() {
-  // We use the setState hook to persist information across renders (such as the result of our API calls)
-  const [songOfTheDay, setSongOfTheDay] = useState({});
-  // TODO (TASK 13): add a state variable to store the app author (default to '')
+export default function HomePage({username, userId}) {
+  // const [longtitude, setLongtitude] = useState(0);
+  // const [latitude, setLatitude] = useState(0);
 
-  const [selectedSongId, setSelectedSongId] = useState(null);
+  const [businesses, setBusinesses] = useState([]);
+  const [pageSize1, setPageSize1] = useState(5);
 
-  // The useEffect hook by default runs the provided callback after every render
-  // The second (optional) argument, [], is the dependency array which signals
-  // to the hook to only run the provided callback if the value of the dependency array
-  // changes from the previous render. In this case, an empty array means the callback
-  // will only run on the very first render.
+  const [taste, setTaste] = useState({});
+  const [pageSize2, setPageSize2] = useState(5);
+
+  const [categories, setCategories] = useState({});
+  const [pageSize3, setPageSize3] = useState(5);
+
+  const [lowest, setLowest] = useState({});
+  const [pageSize4, setPageSize4] = useState(5);
+  
   useEffect(() => {
-    // Fetch request to get the song of the day. Fetch runs asynchronously.
-    // The .then() method is called when the fetch request is complete
-    // and proceeds to convert the result to a JSON which is finally placed in state.
-    fetch(`http://${config.server_host}:${config.server_port}/random`)
-      .then(res => res.json())
-      .then(resJson => setSongOfTheDay(resJson));
+    fetch(`http://${config.server_host}:${config.server_port}/recommendation`, {
+      method: "GET",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.businesses !== null) {
+        setBusinesses(data.businesses);
+        console.log(data);
+      } else {
+        console.log("Get recommendation error");
+      }
+    });
 
-    // TODO (TASK 14): add a fetch call to get the app author (name not pennkey) and store it in the state variable
+    fetch(`http://${config.server_host}:${config.server_port}/similar_taste_users_favourite/${userId}`, {
+      method: "GET",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.businesses !== null) {
+        setTaste(data.businesses);
+        console.log(data);
+      } else {
+        console.log("Get similar taste error");
+      }
+    });
+
+    fetch(`http://${config.server_host}:${config.server_port}/highest_star_category_review_count`, {
+      method: "GET",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.categories !== null) {
+        const categoriesWithId = data.categories.map((item, index) => ({
+          id: index,
+          category: item.category,
+          reveiw_count: item.reveiw_count,
+        }));
+        setCategories(categoriesWithId);
+      } else {
+        console.log("Get category with the highest stars error");
+      }
+    });
+
+    // fetch(`http://${config.server_host}:${config.server_port}/business_in_city_lowest_review`, {
+    //   method: "GET",
+    //   crossDomain: true,
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Accept: "application/json",
+    //   },
+    // })
+    // .then((res) => res.json())
+    // .then((data) => {
+    //   if (data.businesses !== null) {
+    //     const businessWithId = data.businesses.map((business) => ({id: business.business_id, ...business}));
+    //     setLowest(businessWithId);
+    //     console.log(data);
+    //   } else {
+    //     console.log("Get the businesses that are in the cities that have lowest user reviews error");
+    //   }
+    // });
   }, []);
 
-  // Here, we define the columns of the "Top Songs" table. The songColumns variable is an array (in order)
-  // of objects with each object representing a column. Each object has a "field" property representing
-  // what data field to display from the raw data, "headerName" property representing the column label,
-  // and an optional renderCell property which given a row returns a custom JSX element to display in the cell.
-  const songColumns = [
-    {
-      field: 'title',
-      headerName: 'Song Title',
-      renderCell: (row) => <Link onClick={() => setSelectedSongId(row.song_id)}>{row.title}</Link> // A Link component is used just for formatting purposes
-    },
-    {
-      field: 'album',
-      headerName: 'Album',
-      renderCell: (row) => <NavLink to={`/albums/${row.album_id}`}>{row.album}</NavLink> // A NavLink component is used to create a link to the album page
-    },
-    {
-      field: 'plays',
-      headerName: 'Plays'
-    },
-  ];
 
-  // TODO (TASK 15): define the columns for the top albums (schema is Album Title, Plays), where Album Title is a link to the album page
-  // Hint: this should be very similar to songColumns defined above, but has 2 columns instead of 3
-  const albumColumns = [
+  // const handleSubmit = () => {
+  //   console.log('Get recommendation: ' + JSON.stringify({
+  //     longtitude: longtitude,
+  //     latitude: latitude,
+  //   }))
+  //   fetch(`http://${config.server_host}:${config.server_port}/recommendation`, {
+  //     method: "GET",
+  //     crossDomain: true,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     if (data.businesses !== null) {
+  //       setBusinesses(data.businesses);
+  //       console.log(data);
+  //     } else {
+  //       console.log("Get recommendation error");
+  //     }
+  //   });
+  // }
 
+  const columns1 = [
+    { field: 'name', headerName: 'Name', width: 300, renderCell: (params) => (
+      <NavLink to={`/business/${params.row.id}`}>{params.value}</NavLink>
+    ) },
+    { field: 'address', headerName: 'Address', width: 400 },
+    { field: 'city', headerName: 'City', width: 200 },
+    { field: 'rating', headerName: 'Rating', width: 200 },
   ]
+
+  const columns2 = [
+    { field: 'name', headerName: 'Name', width: 300, renderCell: (params) => (
+      <NavLink to={`/business/${params.row.id}`}>{params.value}</NavLink>
+    ) },
+    { field: 'address', headerName: 'Address', width: 400 },
+    { field: 'city', headerName: 'City', width: 200 },
+    { field: 'rating', headerName: 'Rating', width: 200 },
+  ]
+
+  const columns3 = [
+    { field: 'category', headerName: 'Category', width: 900},
+    { field: 'reveiw_count', headerName: 'Total Reviews', width: 200 },
+  ]
+
+  // const columns4 = [
+  //   { field: 'name', headerName: 'Name', width: 500, renderCell: (params) => (
+  //     <NavLink to={`/business/${params.row.id}`}>{params.value}</NavLink>
+  //   ) },
+  //   { field: 'city', headerName: 'City', width: 300 },
+  //   { field: 'avg_stars', headerName: 'Average Rating', width: 300 },
+  // ]
 
   return (
     <Container>
-      {/* SongCard is a custom component that we made. selectedSongId && <SongCard .../> makes use of short-circuit logic to only render the SongCard if a non-null song is selected */}
-      {selectedSongId && <SongCard songId={selectedSongId} handleClose={() => setSelectedSongId(null)} />}
-      <h2>Check out your song of the day:&nbsp;
-        <Link onClick={() => setSelectedSongId(songOfTheDay.song_id)}>{songOfTheDay.title}</Link>
-      </h2>
-      <Divider />
-      <h2>Top Songs</h2>
-      <LazyTable route={`http://${config.server_host}:${config.server_port}/top_songs`} columns={songColumns} />
-      <Divider />
-      {/* TODO (TASK 16): add a h2 heading, LazyTable, and divider for top albums. Set the LazyTable's props for defaultPageSize to 5 and rowsPerPageOptions to [5, 10] */}
-      {/* TODO (TASK 17): add a paragraph (<p>text</p>) that displays the value of your author state variable from TASK 13 */}
+      <h1>Home Page</h1>
+      <p><b>Username: </b>{username}</p>
+      <br />
+      <h2>Business Recommendation</h2>
+      {/* <p>Change longtitude and latitude to have different recommendation</p> */}
+      {/* <Grid container spacing={3}>
+        <Grid item xs={8}>
+          <TextField label='Longtitude' onChange={(e) => setLongtitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
+        </Grid>
+        <Grid item xs={8}>
+          <TextField label='Latitude' onChange={(e) => setLatitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
+        </Grid>
+      </Grid>
+      <br />
+      <Button onClick={() => handleSubmit() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+        Search
+      </Button> */}
+      <DataGrid
+        rows={businesses}
+        columns={columns1}
+        pageSize={pageSize1}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize1(newPageSize)}
+        autoHeight
+        autoWidth
+      />
+      <br />
+      <h2>Favorite Business of the Users Who Have Similar Tastes to You </h2>
+      <DataGrid
+        rows={taste}
+        columns={columns2}
+        pageSize={pageSize2}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize2(newPageSize)}
+        autoHeight
+        autoWidth
+      />
+      <br />
+      <h2>Categories with the Highest Stars</h2>
+      <DataGrid
+        rows={categories}
+        columns={columns3}
+        pageSize={pageSize3}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize3(newPageSize)}
+        autoHeight
+        autoWidth
+      />
+      <br />
+      <h2>Businesses in the Cities that Have Lowest User Reviews</h2>
+      {/* <DataGrid
+        rows={lowest}
+        columns={columns4}
+        pageSize={pageSize4}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize4(newPageSize)}
+        autoHeight
+        autoWidth
+      /> */}
     </Container>
   );
 };

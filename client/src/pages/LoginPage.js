@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Container, Grid, TextField, Button } from '@mui/material';
+import { NavLink } from 'react-router-dom';
 import './index.css';
 
 const config = require('../config.json');
@@ -7,8 +9,7 @@ export default function LoginPage({isLoggedIn, updateLoggedInStatus, updateUsern
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         console.log('Logging, username: ' + username + ', password: ' + password);
 
         fetch(`http://${config.server_host}:${config.server_port}/login`, {
@@ -36,20 +37,23 @@ export default function LoginPage({isLoggedIn, updateLoggedInStatus, updateUsern
     }
 
     return (
-        <div className="login-container">
+        <Container>
             <h2>Login</h2>
-            <form className="login-form" onSubmit={handleSubmit}>
-              <div className="username-input">
-                <label>Username   </label>
-                <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Username"/>
-              </div>
-              <div className="password-input">
-                <label>Password   </label>
-                <input value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"/>
-              </div>   
-              <button type="submit">Log In</button>
-            </form>
-            <a href="/register">Register Here</a>
-        </div>
+            <br/>
+            <Grid container spacing={3}>
+              <Grid item xs={8}>
+                <TextField label='Username' onChange={(e) => setUsername(e.target.value)} style={{ width: "100%" }}/>
+              </Grid>
+              <Grid item xs={8}>
+                <TextField label='Password' onChange={(e) => setPassword(e.target.value)} style={{ width: "100%" }}/>
+              </Grid>
+            </Grid>
+            <br />
+            <Button onClick={() => handleSubmit() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+              Login
+            </Button>
+            <br />
+            <NavLink to={'/register'}>Register Here</NavLink>
+        </Container>
     )
 }

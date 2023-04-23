@@ -13,9 +13,11 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
   const [reviewData, setReviewData] = useState({});
   const [tipData, setTipData] = useState({});
   const { business_id } = useParams();
+  const [topUsers, setTopUsers] = useState({});
 
   const [pageSize1, setPageSize1] = useState(5);
   const [pageSize2, setPageSize2] = useState(5);
+  const [pageSize3, setPageSize3] = useState(5);
 
   const [star, setStar] = useState('');
   const [reviewText, setReviewText] = useState('');
@@ -46,6 +48,15 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
           setTipData(tipsWithId);
         });
       });
+    
+    
+    fetch(`http://${config.server_host}:${config.server_port}/top_reviews/${business_id}`)
+    .then(res4 => res4.json())
+    .then(resJson4 => {
+      const usersWithId = resJson4.user_info.map((user) => ({ id: user.user_id, ...user }));
+      setTopUsers(usersWithId);
+      console.log(resJson4);
+    });
   }, []);
 
 
@@ -63,6 +74,12 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
     { field: 'tip_user_name', headerName: 'User', width: 200 },
     { field: 'text', headerName: 'Tip', width: 500 },
     { field: 'clean_date', headerName: 'Date', width: 105 },
+  ]
+
+  const columns3 = [
+    { field: 'user_name', headerName: 'User Name', width: 200 },
+    { field: 'diplay_name', headerName: 'Display Name', width: 500 },
+    { field: 'total_reviews', headerName: 'Total Reviews', width: 105 },
   ]
 
   const handleReviewSubmit = () => {
@@ -198,6 +215,17 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
         </div>
       ) : <></>}
       
+      <br></br>
+      <h2>Top 5 Users Who Write Most Useful, Funny, and Cool Reviews</h2>
+      <DataGrid
+        rows={topUsers}
+        columns={columns3}
+        pageSize={pageSize3}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize2) => setPageSize3(newPageSize2)}
+        autoHeight
+        autoWidth
+      />
       <br></br>
       <NavLink to={'/'}>Back to Home Page</NavLink>
     </Container>
