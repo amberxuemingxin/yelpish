@@ -54,13 +54,16 @@ async function getReviewObjects(review_ids, user_id_) {
                 a.cool_count,
                 a.user_useful,
                 a.user_funny,
-                a.user_cool
+                a.user_cool,
+                b.name as business_name
             from
                 selected_reviews s
                 inner join \`user\` u
-                on s.user_id = u.user_id
+                    on s.user_id = u.user_id
                 inner join attitude_info a
-                on s.review_id = a.review_id
+                    on s.review_id = a.review_id
+                inner join business b
+                    on s.business_id = b.business_id
         `,
         [review_ids, user_id, user_id, user_id]
     )
