@@ -90,7 +90,7 @@ const theme = createTheme({
 // }));
 
 
-export default function NavBar() {
+export default function NavBar({isLoggedIn}) {
   return (
     <AppBar position='static' theme={theme}>
       <Container maxWidth='xl'>
@@ -105,7 +105,10 @@ export default function NavBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search> */}
-          <NavText href='/search_business' text='search business' />
+          <NavText href='/search_business' text='Search Business' />
+          {isLoggedIn ? <></> : <NavText href='/' text='Login' />}
+          {isLoggedIn ? <NavText href='/profile' text='Profile' /> : <></>}
+          {isLoggedIn ? <NavText href='/find_friend' text='Find Friend' /> : <></>}
         </Toolbar>
       </Container>
     </AppBar>

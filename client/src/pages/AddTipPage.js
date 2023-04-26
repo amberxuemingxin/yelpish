@@ -5,8 +5,7 @@ import { NavLink } from 'react-router-dom';
 const config = require('../config.json');
 
 
-export default function AddReviewPage({userId, businessId}) {
-    const [star, setStar] = useState('');
+export default function AddTipPage({userId, businessId}) {
     const [text, setText] = useState('');
     const [data, setData] = useState(null);
     const [addReviewSuccess, setAddReviewSuccess] = useState(false);
@@ -27,17 +26,16 @@ export default function AddReviewPage({userId, businessId}) {
           body: JSON.stringify({
             user_id: userId,
             business_id: businessId,
-            star: star,
             text: text
           }),
         })
         .then((res) => res.json())
-        .then((resJson) => {
-          if (resJson.review_id === null) {
+        .then((data) => {
+          if (data.review_id === null) {
             console.log('Add review error.');
             setAddReviewFailure(true);
           } else {
-            setData(resJson);
+            setData(data);
             setAddReviewSuccess(true);
           }
         });
@@ -47,10 +45,6 @@ export default function AddReviewPage({userId, businessId}) {
       <Container>
         <h2>Add Your Review Here</h2>
         <form onSubmit={handleSubmit}>
-          <div >
-            <label>Star</label>
-            <input value={star} onChange={(e) => setStar(e.target.value)} placeholder="0 - 5" />
-          </div>
           <div>
             <label>Text</label>
             <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Review Text"/>

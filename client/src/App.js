@@ -6,16 +6,12 @@ import React, { useState, useEffect} from "react";
 
 import NavBar from './components/NavBar';
 import HomePage from './pages/HomePage';
-import AlbumsPage from './pages/AlbumsPage';
-import SongsPage from './pages/SongsPage';
-import AlbumInfoPage from './pages/AlbumInfoPage';
-
-import HomePage2 from './pages/HomePage2';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from "./pages/ProfilePage";
 import SearchBusinessPage from "./pages/SearchBusinessPage";
-import AddReviewPage from "./pages/AddReviewPage";
+import BusinessInfoPage from "./pages/BusinessInfoPage";
+import FindFriendPage from "./pages/FindFriendPage";
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -43,17 +39,18 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <NavBar />
+        <NavBar isLoggedIn={isLoggedIn} />
         <Routes>
-          <Route path="/" element={isLoggedIn ? <HomePage2 username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
+          <Route path="/" element={isLoggedIn ? <HomePage username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/search_business" element={<SearchBusinessPage/>} />
+          <Route path="/business/:business_id" element={<BusinessInfoPage userId={userId} isLoggedIn={isLoggedIn} />} />
           {isLoggedIn ? 
-              <Route path="/profile" element={<ProfilePage username={username} userId="__QLyY_W06q10ZfBQg7Dcg"/>} />
+              <Route path="/profile" element={<ProfilePage username={username} userId={userId}/>} />
             : <Route/>
           }
           {isLoggedIn ? 
-              <Route path="/add_review" element={<AddReviewPage userId={userId} businessId="_-ag9LGrOJkJW3bXmtAv-w"/>} />
+              <Route path="/find_friend" element={<FindFriendPage/>} />
             : <Route/>
           }
         </Routes>
