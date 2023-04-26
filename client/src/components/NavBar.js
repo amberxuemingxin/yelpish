@@ -108,6 +108,7 @@ export default function NavBar({isLoggedIn}) {
           <NavText href='/search_business' text='Search Business' />
           {isLoggedIn ? <></> : <NavText href='/' text='Login' />}
           {isLoggedIn ? <NavText href='/profile' text='Profile' /> : <></>}
+          {isLoggedIn ? <NavText href='/find_friend' text='Find Friend' /> : <></>}
         </Toolbar>
       </Container>
     </AppBar>

@@ -4,7 +4,7 @@ const { connection, async_query } = require("../db_connection")
 async function top_reviews(req, res) {
     const business_id = req.params.business_id
     const lastNDays = parseInt(req.query.lastNday ?? '1000')
-    console.log("business_id: " + business_id + " lastNDays: " + lastNDays);
+    
     const result = await async_query(
         `
         WITH max_date AS (

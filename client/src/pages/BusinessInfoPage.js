@@ -28,6 +28,8 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
   const [addTipSuccess, setAddTipSuccess] = useState(false);
   const [addTipFailure, setAddTipFailure] = useState(false);
 
+  const [lastNday, setLastNday] = useState(1000);
+
   useEffect(() => {
     fetch(`http://${config.server_host}:${config.server_port}/business/${business_id}`)
       .then(res => res.json())
@@ -49,14 +51,14 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
         });
       });
     
+      fetch(`http://${config.server_host}:${config.server_port}/top_reviews/${business_id}?lastNday=${lastNday}`)
+      .then(res4 => res4.json())
+      .then(resJson4 => {
+        const usersWithId = resJson4.user_info.map((user) => ({ id: user.user_id, ...user }));
+        setTopUsers(usersWithId);
+        console.log(resJson4);
+      });
     
-    fetch(`http://${config.server_host}:${config.server_port}/top_reviews/${business_id}`)
-    .then(res4 => res4.json())
-    .then(resJson4 => {
-      const usersWithId = resJson4.user_info.map((user) => ({ id: user.user_id, ...user }));
-      setTopUsers(usersWithId);
-      console.log(resJson4);
-    });
   }, []);
 
 
@@ -72,14 +74,14 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
 
   const columns2 = [
     { field: 'tip_user_name', headerName: 'User', width: 200 },
-    { field: 'text', headerName: 'Tip', width: 500 },
-    { field: 'clean_date', headerName: 'Date', width: 105 },
+    { field: 'text', headerName: 'Tip', width: 700 },
+    { field: 'clean_date', headerName: 'Date', width: 200 },
   ]
 
   const columns3 = [
-    { field: 'user_name', headerName: 'User Name', width: 200 },
-    { field: 'diplay_name', headerName: 'Display Name', width: 500 },
-    { field: 'total_reviews', headerName: 'Total Reviews', width: 105 },
+    { field: 'username', headerName: 'User Name', width: 400 },
+    { field: 'display_name', headerName: 'Display Name', width: 400 },
+    { field: 'total_reviews', headerName: 'Total Reviews', width: 200 },
   ]
 
   const handleReviewSubmit = () => {
@@ -146,6 +148,18 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
         const tipsWithId = resJson3.tips.map((tip) => ({ id: tip.tip_id, clean_date: tip.date.substring(0, 10), ...tip }));
         setTipData(tipsWithId);
       });
+    });
+  }
+
+  const handleTopSubmit = () => {
+    console.log('Searching top...');
+
+    fetch(`http://${config.server_host}:${config.server_port}/top_reviews/${business_id}?lastNday=${lastNday}`)
+    .then(res4 => res4.json())
+    .then(resJson4 => {
+      const usersWithId = resJson4.user_info.map((user) => ({ id: user.user_id, ...user }));
+      setTopUsers(usersWithId);
+      console.log(resJson4);
     });
   }
 
@@ -216,7 +230,17 @@ export default function BusinessInfoPage({userId, isLoggedIn}) {
       ) : <></>}
       
       <br></br>
-      <h2>Top 5 Users Who Write Most Useful, Funny, and Cool Reviews</h2>
+      <h2>Top 5 Users Who Write Most Useful, Funny, and Cool Reviews for Last Few Days</h2>
+      <br />
+      <Grid container spacing={3}>
+        <Grid item xs={8}>
+          <TextField label='Past N Day' value={lastNday} onChange={(e) => setLastNday(e.target.value ? e.target.value : 1000)} style={{ width: "100%" }}/>
+        </Grid>
+      </Grid>
+      <Button onClick={() => handleTopSubmit() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+        Search
+      </Button>
+      <br />
       <DataGrid
         rows={topUsers}
         columns={columns3}

@@ -30,6 +30,7 @@ export default function ProfilePage({userId}) {
   }, []);
 
   const columns1 = [
+    { field: 'business_name', headerName: 'Business', width: 200 },
     { field: 'text', headerName: 'Review', width: 500 },
     { field: 'stars', headerName: 'Stars', width: 75 },
     { field: 'useful_count', headerName: 'Useful', width: 75 },

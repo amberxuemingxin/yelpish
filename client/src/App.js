@@ -11,6 +11,7 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from "./pages/ProfilePage";
 import SearchBusinessPage from "./pages/SearchBusinessPage";
 import BusinessInfoPage from "./pages/BusinessInfoPage";
+import FindFriendPage from "./pages/FindFriendPage";
 
 // createTheme enables you to customize the look and feel of your app past the default
 // in this case, we only change the color scheme
@@ -46,6 +47,10 @@ export default function App() {
           <Route path="/business/:business_id" element={<BusinessInfoPage userId={userId} isLoggedIn={isLoggedIn} />} />
           {isLoggedIn ? 
               <Route path="/profile" element={<ProfilePage username={username} userId={userId}/>} />
+            : <Route/>
+          }
+          {isLoggedIn ? 
+              <Route path="/find_friend" element={<FindFriendPage/>} />
             : <Route/>
           }
         </Routes>

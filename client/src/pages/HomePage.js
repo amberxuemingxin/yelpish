@@ -6,8 +6,8 @@ import { DataGrid } from '@mui/x-data-grid';
 const config = require('../config.json');
 
 export default function HomePage({username, userId}) {
-  // const [longtitude, setLongtitude] = useState(0);
-  // const [latitude, setLatitude] = useState(0);
+  const [longtitude, setLongtitude] = useState(0);
+  const [latitude, setLatitude] = useState(0);
 
   const [businesses, setBusinesses] = useState([]);
   const [pageSize1, setPageSize1] = useState(5);
@@ -22,7 +22,7 @@ export default function HomePage({username, userId}) {
   const [pageSize4, setPageSize4] = useState(5);
   
   useEffect(() => {
-    fetch(`http://${config.server_host}:${config.server_port}/recommendation`, {
+    fetch(`http://${config.server_host}:${config.server_port}/recommendation?longitude=${longtitude}&latitude=${latitude}`, {
       method: "GET",
       crossDomain: true,
       headers: {
@@ -101,29 +101,30 @@ export default function HomePage({username, userId}) {
   }, []);
 
 
-  // const handleSubmit = () => {
-  //   console.log('Get recommendation: ' + JSON.stringify({
-  //     longtitude: longtitude,
-  //     latitude: latitude,
-  //   }))
-  //   fetch(`http://${config.server_host}:${config.server_port}/recommendation`, {
-  //     method: "GET",
-  //     crossDomain: true,
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //   })
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     if (data.businesses !== null) {
-  //       setBusinesses(data.businesses);
-  //       console.log(data);
-  //     } else {
-  //       console.log("Get recommendation error");
-  //     }
-  //   });
-  // }
+  const handleSubmit = () => {
+    console.log('Get recommendation: ' + JSON.stringify({
+      longtitude: longtitude,
+      latitude: latitude,
+    }))
+    fetch(`http://${config.server_host}:${config.server_port}/recommendation?longitude=${longtitude}&latitude=${latitude}`, {
+      method: "GET",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.businesses !== null) {
+        setBusinesses(data.businesses);
+        console.log('recommendation:');
+        console.log(data);
+      } else {
+        console.log("Get recommendation error");
+      }
+    });
+  }
 
   const columns1 = [
     { field: 'name', headerName: 'Name', width: 300, renderCell: (params) => (
@@ -162,8 +163,8 @@ export default function HomePage({username, userId}) {
       <p><b>Username: </b>{username}</p>
       <br />
       <h2>Business Recommendation</h2>
-      {/* <p>Change longtitude and latitude to have different recommendation</p> */}
-      {/* <Grid container spacing={3}>
+      <p>Change longtitude and latitude to search recommendation at different locations</p>
+      <Grid container spacing={3}>
         <Grid item xs={8}>
           <TextField label='Longtitude' onChange={(e) => setLongtitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
         </Grid>
@@ -174,7 +175,7 @@ export default function HomePage({username, userId}) {
       <br />
       <Button onClick={() => handleSubmit() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
         Search
-      </Button> */}
+      </Button>
       <DataGrid
         rows={businesses}
         columns={columns1}
