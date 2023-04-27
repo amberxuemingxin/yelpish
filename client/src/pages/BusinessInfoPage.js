@@ -37,11 +37,7 @@ export default function BusinessInfoPage({ userId, isLoggedIn }) {
       .then(resJson => {
         setBusinessData(resJson);
 
-        const photos = resJson.photos.map(photo => {
-          const img = new Image();
-          img.src = `http://44.215.185.232/${photo}.jpg`;
-          return img;
-        });
+        const photos = resJson.photos?.map(photo => `http://44.215.185.232/${photo}.jpg`);
         setPhotos(photos);
 
         fetch(`http://${config.server_host}:${config.server_port}/reviews/${business_id}`)
@@ -171,8 +167,8 @@ export default function BusinessInfoPage({ userId, isLoggedIn }) {
       });
   }
 
-  const renderedPhotos = photos.map(photo => (
-    <img key={photo.src} src={photo.src} alt="Business" />
+  const renderedPhotos = photos?.map(photo => (
+    <img key={photo} src={photo} alt="Business" />
   ));
 
   return (
