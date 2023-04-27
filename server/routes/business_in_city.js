@@ -23,7 +23,7 @@ async function business_in_city_lowest_review(req, res) {
         FROM business b JOIN t1 ON b.city = t1.city
             JOIN review r2 on b.business_id = r2.business_id
         GROUP BY b.business_id,  b.name,  b.city
-        ORDER BY avg_stars ASC, b.name ASC
+        ORDER BY avg_stars DESC, b.name ASC
         limit 10
         ;
         `

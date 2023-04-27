@@ -57,6 +57,9 @@ app.get('/highest_star_category_review_count', highest_star_category_review_coun
 const business_in_city_lowest_review = require("./routes/business_in_city")
 app.get('/business_in_city_lowest_review', business_in_city_lowest_review)
 
+const business_in_city_lowest_review_optim = require("./routes/business_in_city_optim")
+app.get('/business_in_city_lowest_review_optim', business_in_city_lowest_review_optim)
+
 const find_friend = require("./routes/find_friend")
 app.get('/find_friend', find_friend)
 
