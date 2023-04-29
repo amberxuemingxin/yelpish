@@ -8,8 +8,10 @@ export default function FindFriendPage({ login_user_id, login_user_name }) {
 
     const [username, setUsername] = useState('');
     const [userInfo, setUserInfo] = useState({});
+    const [requestSuccess, setRequestSuccess] = useState(false);
 
     const handleSubmit = () => {
+      setRequestSuccess(false);
       if (username !== login_user_name) {
         fetch(`http://${config.server_host}:${config.server_port}/find_friend?target_username=${username}&login_user_id=${login_user_id}`)
         .then((res) => res.json())
@@ -44,7 +46,8 @@ export default function FindFriendPage({ login_user_id, login_user_name }) {
         .then((res) => res.json())
         .then((data) => {
           if (data !== null) {
-            
+            setRequestSuccess(data);
+            console.log(data);
           }
         });
       
@@ -72,7 +75,8 @@ export default function FindFriendPage({ login_user_id, login_user_name }) {
             {userInfo.is_friend ? <></> : 
               <Button onClick={() => handleAddFriendSubmit() } style={{ left: '50%', transform: 'translateX(-50%)' }}>
                 Add Friend
-              </Button>}
+              </Button> }
+            {requestSuccess ? <p>Request Sent</p> : <></>}
             <br />
             <NavLink to={'/'}>Back to Home Page</NavLink>
         </Container>
