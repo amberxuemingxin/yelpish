@@ -17,7 +17,7 @@ async function request_add_friend(req, res) {
         [login_user_id, target_user_id]
     )
 
-    res.json({})
+    res.json({ success: true })
 }
 
 module.exports = request_add_friend
