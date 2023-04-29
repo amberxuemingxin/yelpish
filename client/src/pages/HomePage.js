@@ -20,8 +20,30 @@ export default function HomePage({username, userId}) {
 
   const [lowest, setLowest] = useState({});
   const [pageSize4, setPageSize4] = useState(5);
+
+  const [newFriends, setNewFriends] = useState({});
+  const [pageSize5, setPageSize5] = useState(5);
   
   useEffect(() => {
+    fetch(`http://${config.server_host}:${config.server_port}/pending_friend_request/${userId}`, {
+      method: "GET",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.request_users_info !== null) {
+        const friendsWithId = data.request_users_info.map((friend) => ({ id: friend.user_id, accept: false, decline: false, ...friend }));
+        setNewFriends(friendsWithId);
+        console.log(friendsWithId);
+      } else {
+        console.log("Get pending_friend_request error");
+      }
+    });
+    
     fetch(`http://${config.server_host}:${config.server_port}/recommendation?longitude=${longtitude}&latitude=${latitude}`, {
       method: "GET",
       crossDomain: true,
@@ -126,6 +148,48 @@ export default function HomePage({username, userId}) {
     });
   }
 
+  const handleAcceptFriendSubmit = (request_user_id, accept) => {
+    console.log('Accept Friend Request, request_user_id: ' + request_user_id + ' , accept: ' + accept);
+    fetch(`http://${config.server_host}:${config.server_port}/respond_add_friend`, {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        request_user_id: request_user_id,
+        accept: accept,
+      }),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data !== null) {
+        
+      }
+
+      fetch(`http://${config.server_host}:${config.server_port}/pending_friend_request/${userId}`, {
+        method: "GET",
+        crossDomain: true,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.request_users_info !== null) {
+          const friendsWithId = data.request_users_info.map((friend) => ({ id: friend.user_id, accept: false, decline: false, ...friend }));
+          setNewFriends(friendsWithId);
+          console.log(friendsWithId);
+        } else {
+          console.log("Get pending_friend_request error");
+        }
+      });
+    });
+  }
+
   const columns1 = [
     { field: 'name', headerName: 'Name', width: 300, renderCell: (params) => (
       <NavLink to={`/business/${params.row.id}`}>{params.value}</NavLink>
@@ -157,10 +221,36 @@ export default function HomePage({username, userId}) {
   //   { field: 'avg_stars', headerName: 'Average Rating', width: 300 },
   // ]
 
+  const newFriendColumns = [
+    { field: 'user_id', headerName: 'User ID', width: 400},
+    { field: 'user_name', headerName: 'User Name', width: 300 },
+    { field: 'accept', headerName: 'Accept', width: 200, renderCell: (params) => (
+      <Button onClick={() => handleAcceptFriendSubmit(params.row.user_id, true) } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+        Accept
+      </Button>
+    ) },
+    { field: 'decline', headerName: 'Decline', width: 200, renderCell: (params) => (
+      <Button onClick={() => handleAcceptFriendSubmit(params.row.user_id, false) } style={{ left: '50%', transform: 'translateX(-50%)' }}>
+        Decline
+      </Button>
+    ) },
+  ]
+
   return (
     <Container>
       <h1>Home Page</h1>
       <p><b>Username: </b>{username}</p>
+      <br />
+      <h2>Pending Friend Requests</h2>
+      <DataGrid
+        rows={newFriends}
+        columns={newFriendColumns}
+        pageSize={pageSize5}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize) => setPageSize5(newPageSize)}
+        autoHeight
+        autoWidth
+      />
       <br />
       <h2>Business Recommendation</h2>
       <p>Change longtitude and latitude to search recommendation at different locations</p>

@@ -35,11 +35,18 @@ export default function App() {
     console.log('isLoggedIn: ' + isLoggedIn);
   }, [isLoggedIn]);
 
+  const signout = () => {
+    console.log('signout clicked'); 
+    setIsLoggedIn(false);
+    setUserId('');
+    setUsername('');
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <NavBar isLoggedIn={isLoggedIn} />
+        <NavBar isLoggedIn={isLoggedIn} signout={signout} />
         <Routes>
           <Route path="/" element={isLoggedIn ? <HomePage username={username} userId={userId} /> : <LoginPage updateLoggedInStatus={setIsLoggedIn} updateUsername={setUsername} updateUserId={setUserId}/>} />
           <Route path="/register" element={<RegisterPage />} />
@@ -50,7 +57,7 @@ export default function App() {
             : <Route/>
           }
           {isLoggedIn ? 
-              <Route path="/find_friend" element={<FindFriendPage/>} />
+              <Route path="/find_friend" element={<FindFriendPage login_user_id={userId} login_user_name={username}/>} />
             : <Route/>
           }
         </Routes>

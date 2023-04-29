@@ -90,7 +90,33 @@ const theme = createTheme({
 // }));
 
 
-export default function NavBar({isLoggedIn}) {
+export default function NavBar({isLoggedIn, signout}) {
+  const NavText2 = ({ href, text }) => {
+    return (
+      <Typography
+        variant={'h7'}
+        noWrap
+        style={{
+          marginRight: '30px',
+          fontFamily: 'monospace',
+          fontWeight: 700,
+          letterSpacing: '.3rem',
+        }}
+        onClick={() => signout()}
+      >
+        <NavLink
+          to={href}
+          style={{
+            color: '#ffffff',
+            textDecoration: 'none',
+          }}
+        >
+          {text}
+        </NavLink>
+      </Typography>
+    )
+  }
+
   return (
     <AppBar position='static' theme={theme}>
       <Container maxWidth='xl'>
@@ -109,6 +135,7 @@ export default function NavBar({isLoggedIn}) {
           {isLoggedIn ? <></> : <NavText href='/' text='Login' />}
           {isLoggedIn ? <NavText href='/profile' text='Profile' /> : <></>}
           {isLoggedIn ? <NavText href='/find_friend' text='Find Friend' /> : <></>}
+          {isLoggedIn ? <NavText2 href='/' text='Sign Out' /> : <></>}
         </Toolbar>
       </Container>
     </AppBar>
