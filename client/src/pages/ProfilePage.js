@@ -8,6 +8,7 @@ const config = require('../config.json');
 export default function ProfilePage({userId}) {
   const [profileData, setProfileData] = useState({});
   const [reviewData, setReviewData] = useState({});
+  const [friendsData, setFriendsData] = useState({});
   const [pageSize1, setPageSize1] = useState(5);
 
   useEffect(() => {
@@ -21,10 +22,16 @@ export default function ProfilePage({userId}) {
         })
         .then((res) => res.json())
         .then((data) => {
-          setProfileData(data);
-
-          const reviewsWithId = data.reviews.map((review) => ({ id: review.review_id, clean_date: review.date.substring(0, 10), ...review }));
-          setReviewData(reviewsWithId);
+          if (data !== null) {
+            setProfileData(data);
+            const reviewsWithId = data.reviews.map((review) => ({ id: review.review_id, clean_date: review.date.substring(0, 10), ...review }));
+            setReviewData(reviewsWithId);
+            if(data.friends_info.length > 0) {
+              const friendsWithId = data.friends_info.map((friend) => ({ id: friend.user_id, ...friend }));
+              setFriendsData(friendsWithId);
+            }
+          }
+          
           console.log(data);
         });
   }, []);
@@ -39,6 +46,11 @@ export default function ProfilePage({userId}) {
     { field: 'clean_date', headerName: 'Date', width: 105 },
   ]
 
+  const columns2 = [
+    { field: 'user_id', headerName: 'User ID', width: 550 },
+    { field: 'name', headerName: 'User Name', width: 550 },
+  ]
+
   
   // window.location = "http://localhost:3000/login";
   return (
@@ -46,9 +58,14 @@ export default function ProfilePage({userId}) {
       <h1>Profile</h1>
       {profileData === null ? <div/> : 
       <div>
+        <p><b>User ID: </b>{userId}</p>
+        <br />
         <p><b>Username: </b>{profileData.username}</p>
+        <br />
         <p><b>Name: </b>{profileData.name}</p>
+        <br />
         <b>Reviews: </b>
+        <br />
         <DataGrid
         rows={reviewData}
         columns={columns1}
@@ -58,6 +75,19 @@ export default function ProfilePage({userId}) {
         autoHeight
         autoWidth
         />
+        <br />
+        <b>Friends: </b>
+        <br />
+        <DataGrid
+        rows={friendsData}
+        columns={columns2}
+        pageSize={pageSize1}
+        rowsPerPageOptions={[5, 10, 25]}
+        onPageSizeChange={(newPageSize1) => setPageSize1(newPageSize1)}
+        autoHeight
+        autoWidth
+        />
+
       </div>
       }
       

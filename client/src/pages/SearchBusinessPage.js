@@ -64,7 +64,7 @@ export default function SearchBusinessPage() {
 
     return (
         <Container>
-            <h1>Seach Business</h1>
+            <h1>Search Business</h1>
             <Grid container spacing={3}>
               <Grid item xs={8}>
                 <TextField label='Business Name' value={name} onChange={(e) => setName(e.target.value)} style={{ width: "100%" }}/>
