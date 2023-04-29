@@ -180,6 +180,9 @@ export default function BusinessInfoPage({ userId, isLoggedIn }) {
       <p><b>City:</b> {businessData.city}</p>
       <p><b>State:</b> {businessData.state}</p>
       <br></br>
+      <h2>Business Images</h2>
+      <div>{renderedPhotos} </div>
+      <br></br>
       <h2>Reviews</h2>
       <DataGrid
         rows={reviewData}
@@ -258,10 +261,7 @@ export default function BusinessInfoPage({ userId, isLoggedIn }) {
         autoHeight
         autoWidth
       />
-      <br></br>
-
-      <h2>Business Images</h2>
-      <div>{renderedPhotos} </div>
+      
 
       <br></br>
       <NavLink to={'/'}>Back to Home Page</NavLink>
