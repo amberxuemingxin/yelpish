@@ -471,10 +471,10 @@ def create_photo():
 
 
 if __name__ == "__main__":
-    # create_business()
-    # create_business_categories()
+    create_business()
+    create_business_categories()
     create_user()
-    # create_review()
-    # create_review_attitude()
-    # create_tip()
-    # create_photo()
+    create_review()
+    create_review_attitude()
+    create_tip()
+    create_photo()
