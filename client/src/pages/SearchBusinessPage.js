@@ -8,7 +8,7 @@ const config = require('../config.json');
 export default function SearchBusinessPage() {
     const [name, setName] = useState('');
     const [categories, setCategories] = useState([]);
-    const [longtitude, setLongtitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
     const [latitude, setLatitude] = useState(0);
     const [max_miles, setMaxMiles] = useState(0);
     const [min_rating, setMinRating] = useState(-1);
@@ -21,7 +21,7 @@ export default function SearchBusinessPage() {
       console.log('search business: ' + JSON.stringify({
         name_keyword: name,
         categories: categories,
-        longtitude: longtitude,
+        longitude: longitude,
         latitude: latitude,
         max_miles: max_miles,
         min_rating: min_rating
@@ -36,7 +36,7 @@ export default function SearchBusinessPage() {
         body: JSON.stringify({
           name_keyword: name,
           categories: categories,
-          longtitude: longtitude,
+          longitude: longitude,
           latitude: latitude,
           max_miles: max_miles,
           min_rating: min_rating
@@ -73,7 +73,7 @@ export default function SearchBusinessPage() {
                 <TextField label='Categories' value={categories} onChange={(e) => setCategories(e.target.value ? e.target.value.split(" ,") : [])} style={{ width: "100%" }}/>
               </Grid>
               <Grid item xs={8}>
-                <TextField label='Longtitude' onChange={(e) => setLongtitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
+                <TextField label='Longitude' onChange={(e) => setLongitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
               </Grid>
               <Grid item xs={8}>
                 <TextField label='Latitude' onChange={(e) => setLatitude(e.target.value ? e.target.value : 0)} style={{ width: "100%" }}/>
