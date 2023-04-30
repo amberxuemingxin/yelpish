@@ -48,7 +48,9 @@ async function search_business(req, res) {
         ),
         distance_qualified as (
             select
-                business_id
+                business_id,
+                longitude,
+                latitude
             from
                 business
             where
@@ -60,7 +62,8 @@ async function search_business(req, res) {
         ),
         rating_qualified as (
             select
-                business_id
+                business_id,
+                avg(stars) as rating
             from
                 review
             group by
@@ -78,6 +81,17 @@ async function search_business(req, res) {
                 on n.business_id = d.business_id
             inner join rating_qualified r
                 on n.business_id = r.business_id
+        order by
+          power(r.rating, 2) /
+            log(if( 
+              ?, 
+              st_distance_sphere(
+                  point(d.longitude, d.latitude),
+                  point(?, ?)
+              ), 
+              1
+            ))
+          DESC
         limit 10
         ;
         `,
@@ -85,7 +99,7 @@ async function search_business(req, res) {
             `%${name_keyword}%`,
             categories, categories, categories.length,
             skip_distance_filter, longitude, latitude, max_miles * 1609.344, // mile to meters
-            min_rating
+            min_rating, do_distance_filter, longitude, latitude,
         ]
     )
 
