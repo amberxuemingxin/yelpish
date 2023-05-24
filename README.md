@@ -1,4 +1,4 @@
-# CIS-550-Group-Project
+# Yelpish - your local business helper!
 
 ## Backend
 
