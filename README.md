@@ -8,7 +8,7 @@ Our static images and Neo4j are hosted on the EC2 instance on the AWS Academy
 Learner Lab.
 I will have to manually open the lab and start these services,
 and they will only last for 4 hours.
-Therefore, running the app without contacting me (Yifan Li) will have the
+Therefore, running the app without contacting me will have the
 images and Neo4j features disabled.
 
 ### Prerequisites
